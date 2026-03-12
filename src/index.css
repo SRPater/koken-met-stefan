@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap');
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Delight';
+  src: url('./assets/fonts/DELIGHT-THIN.OTF') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Delight';
+  src: url('./assets/fonts/DELIGHT-EXTRALIGHT.OTF') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Delight';
+  src: url('./assets/fonts/DELIGHT-LIGHT.OTF') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Delight';
+  src: url('./assets/fonts/DELIGHT-REGULAR.OTF') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Delight';
+  src: url('./assets/fonts/DELIGHT-MEDIUM.OTF') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Delight';
+  src: url('./assets/fonts/DELIGHT-SEMIBOLD.OTF') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Delight';
+  src: url('./assets/fonts/DELIGHT-BOLD.OTF') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Delight';
+  src: url('./assets/fonts/DELIGHT-EXTRABOLD.OTF') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Delight';
+  src: url('./assets/fonts/DELIGHT-BLACK.OTF') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@theme {
+  --color-brand-cyan: #00cccc;
+  --color-brand-berry: #ac1e42;
+
+  --font-gaegu: "Gaegu", sans-serif;
+  --font-delight: "Delight", sans-serif;
+}
