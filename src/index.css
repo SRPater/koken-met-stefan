@@ -68,6 +68,6 @@
   --color-brand-cyan: #00cccc;
   --color-brand-berry: #ac1e42;
 
-  --font-gaegu: "Gaegu", sans-serif;
-  --font-delight: "Delight", sans-serif;
+  --font-gaegu: 'Gaegu', sans-serif;
+  --font-delight: 'Delight', sans-serif;
 }

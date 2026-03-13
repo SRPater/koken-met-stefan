@@ -4,7 +4,7 @@ import RecipeCard from '../components/RecipeCard';
 import { recipes } from '../data/recipes';
 
 const sortedRecipes = [...recipes].sort(
-  (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded)
+  (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded),
 );
 
 const shuffledRecipes = [...recipes].sort(() => 0.5 - Math.random());
@@ -16,14 +16,14 @@ const Home = () => {
   return (
     <div className="space-y-16">
       <section>
-        <div className="flex items-center gap-3 mb-8">
+        <div className="mb-8 flex items-center gap-3">
           <Clock className="text-brand-berry" size={28} />
-          <h2 className="font-gaegu text-4xl font-black text-brand-berry">
+          <h2 className="font-gaegu text-brand-berry text-4xl font-black">
             Laatst Toegevoegd
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {lastAdded.map((recipe) => (
             <RecipeCard
               key={`latest-${recipe.id}`}
@@ -37,14 +37,14 @@ const Home = () => {
       </section>
 
       <section>
-        <div className="flex items-center gap-3 mb-8">
+        <div className="mb-8 flex items-center gap-3">
           <Sparkles className="text-brand-cyan" size={28} />
-          <h2 className="font-gaegu text-4xl font-black text-brand-cyan">
+          <h2 className="font-gaegu text-brand-cyan text-4xl font-black">
             Willekeurige Recepten
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {randomRecipes.map((recipe) => (
             <RecipeCard
               key={`random-${recipe.id}`}
