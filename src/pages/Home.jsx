@@ -27,6 +27,7 @@ const Home = () => {
           {lastAdded.map((recipe) => (
             <RecipeCard
               key={`latest-${recipe.id}`}
+              id={recipe.id}
               title={recipe.title}
               sourceName={recipe.sourceName}
               image={recipe.image}
@@ -47,6 +48,7 @@ const Home = () => {
           {randomRecipes.map((recipe) => (
             <RecipeCard
               key={`random-${recipe.id}`}
+              id={recipe.id}
               title={recipe.title}
               sourceName={recipe.sourceName}
               image={recipe.image}

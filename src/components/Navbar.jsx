@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 
 const Navbar = () => {
@@ -6,12 +7,15 @@ const Navbar = () => {
     <nav className="w-full bg-white border-b border-slate-200 py-3 sticky top-0 z-10 shadow-sm">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex gap-8 font-gaegu text-2xl font-bold text-slate-600">
-          <a href="#" className="hover:text-brand-cyan transition-colors">
+          <Link to="/" className="hover:text-brand-cyan transition-colors">
             Home
-          </a>
-          <a href="#" className="hover:text-brand-cyan transition-colors">
+          </Link>
+          <Link
+            to="/recepten"
+            className="hover:text-brand-cyan transition-colors"
+          >
             Alle Recepten
-          </a>
+          </Link>
         </div>
 
         <div className="relative w-full md:w-80">
