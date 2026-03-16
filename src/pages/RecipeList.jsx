@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronDown, Filter, Globe } from 'lucide-react';
+import { ChevronDown, Filter, Globe, SearchX } from 'lucide-react';
 import RecipeCard from '../components/RecipeCard';
 import { recipes } from '../data/recipes';
+import { useSearch } from '../context/useSearch';
 
 const RecipeList = () => {
+  const { searchQuery, setSearchQuery } = useSearch();
   const [visibleCount, setVisibleCount] = useState(12);
   const [selectedCuisine, setSelectedCuisine] = useState('Alle Keukens');
   const [selectedSource, setSelectedSource] = useState('Alle Bronnen');
@@ -38,22 +40,39 @@ const RecipeList = () => {
         selectedSource === 'Alle Bronnen' ||
         recipe.sourceName === selectedSource;
 
-      return matchCuisine && matchSource;
+      const isSearchActive = searchQuery.length >= 3;
+      const matchSearch =
+        !isSearchActive ||
+        recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        recipe.ingredients.some((ing) =>
+          ing.name.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
+
+      return matchCuisine && matchSource && matchSearch;
     });
 
     return filtered.sort(
       (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded),
     );
-  }, [selectedCuisine, selectedSource]);
+  }, [selectedCuisine, selectedSource, searchQuery]);
 
   const displayRecipes = filteredRecipes.slice(0, visibleCount);
+
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedCuisine('Alle Keukens');
+    setSelectedSource('Alle Bronnen');
+    setVisibleCount(12);
+  };
 
   return (
     <div className="mx-auto max-w-7xl pb-20">
       <div className="mb-12 flex flex-col gap-8 rounded-3xl border-2 border-slate-100 bg-white p-8 shadow-sm">
         <div className="text-left">
           <h1 className="font-delight text-brand-berry text-4xl font-black tracking-tight uppercase md:text-5xl">
-            Ontdek Recepten
+            {searchQuery.length >= 3
+              ? `Zoekresultaten voor "${searchQuery}"`
+              : 'Ontdek Recepten'}
           </h1>
           <p className="font-gaegu text-2xl text-slate-500">
             {filteredRecipes.length} recepten gevonden
@@ -126,10 +145,21 @@ const RecipeList = () => {
           ))}
         </div>
       ) : (
-        <div className="py-20 text-center">
-          <p className="font-gaegu text-3xl text-slate-400">
-            Geen recepten gevonden met deze filters.
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-100">
+            <SearchX className="text-slate-400" size={40} />
+          </div>
+
+          <p className="font-gaegu mb-8 text-3xl text-slate-500">
+            Geen recepten gevonden voor deze selectie.
           </p>
+
+          <button
+            onClick={resetFilters}
+            className="border-brand-cyan text-brand-cyan font-gaegu hover:bg-brand-cyan cursor-pointer rounded-2xl border-2 px-8 py-3 text-2xl font-bold transition-all hover:text-white active:scale-95"
+          >
+            Alle filters wissen
+          </button>
         </div>
       )}
 
