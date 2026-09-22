@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createRecipe } from "./actions";
+import { parseQuantity } from "@/lib/parse-quantity";
 import { UNIT_OPTIONS } from "@/lib/units";
 
 type IngredientRow = {
   name: string;
   quantity: string;
   unit: string;
+  customUnit: string;
   note: string;
 };
 
@@ -21,7 +23,7 @@ export function RecipeForm() {
   const [sourceUrl, setSourceUrl] = useState("");
   const [steps, setSteps] = useState<string[]>([""]);
   const [ingredients, setIngredients] = useState<IngredientRow[]>([
-    { name: "", quantity: "", unit: "", note: "" },
+    { name: "", quantity: "", unit: "", customUnit: "", note: "" },
   ]);
   const [submitting, setSubmitting] = useState(false);
 
@@ -50,7 +52,7 @@ export function RecipeForm() {
   function addIngredient() {
     setIngredients((prev) => [
       ...prev,
-      { name: "", quantity: "", unit: "", note: "" },
+      { name: "", quantity: "", unit: "", customUnit: "", note: "" },
     ]);
   }
 
@@ -71,13 +73,18 @@ export function RecipeForm() {
         steps: steps.filter((s) => s.trim() !== ""),
         ingredients: ingredients
           .filter((ing) => ing.name.trim() !== "")
-          .map((ing, index) => ({
-            name: ing.name.trim(),
-            quantity: ing.quantity ? Number(ing.quantity) : null,
-            unit: ing.unit || null,
-            note: ing.note || undefined,
-            position: index,
-          })),
+          .map((ing, index) => {
+            const { quantity, quantityMax } = parseQuantity(ing.quantity);
+            return {
+              name: ing.name.trim(),
+              quantity,
+              quantityMax,
+              unit: ing.unit && ing.unit !== "CUSTOM" ? ing.unit : null,
+              customUnit: ing.unit === "CUSTOM" ? ing.customUnit.trim() || undefined : undefined,
+              note: ing.note || undefined,
+              position: index,
+            };
+          }),
       });
       router.push("/recipes");
     } finally {
@@ -211,6 +218,16 @@ export function RecipeForm() {
                   </option>
                 ))}
               </select>
+              {ing.unit === "CUSTOM" && (
+                <input
+                  type="text"
+                  aria-label={`Aangepaste eenheid voor ingrediënt ${index + 1}`}
+                  placeholder="bijv. teentjes"
+                  value={ing.customUnit}
+                  onChange={(e) => updateIngredient(index, "customUnit", e.target.value)}
+                  className="w-28 rounded border border-stone-300 px-2 py-1 dark:border-stone-700 dark:bg-stone-900"
+                />
+              )}
               <input
                 type="text"
                 aria-label={`Naam van ingrediënt ${index + 1}`}

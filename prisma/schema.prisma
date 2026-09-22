@@ -38,6 +38,7 @@ model RecipeIngredient {
   quantity    Decimal? @db.Decimal(10, 3)
   quantityMax Decimal? @db.Decimal(10, 3)
   unit        Unit?
+  customUnit  String?
   note        String?
   scalable    Boolean  @default(true)
   position    Int

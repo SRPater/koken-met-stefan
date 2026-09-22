@@ -6,7 +6,9 @@ import { revalidatePath } from "next/cache";
 type IngredientInput = {
   name: string;
   quantity: number | null;
+  quantityMax: number | null;
   unit: string | null;
+  customUnit?: string;
   note?: string;
   position: number;
 };
@@ -42,7 +44,9 @@ export async function createRecipe(input: CreateRecipeInput) {
             return {
               ingredientId: ingredient.id,
               quantity: ing.quantity,
+              quantityMax: ing.quantityMax,
               unit: ing.unit as never, // narrowed to the Unite num by the <select>
+              customUnit: ing.customUnit,
               note: ing.note,
               position: ing.position,
             };

@@ -19,4 +19,5 @@ export const UNIT_OPTIONS = [
     value,
     label: singular,
   })),
+  { value: "CUSTOM", label: "anders..." },
 ];
