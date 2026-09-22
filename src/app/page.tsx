@@ -1,6 +1,6 @@
 export default function HomePage() {
   return (
-    <div className="flex flex-col gap-10">
+    <div className="mx-auto flex max-w-3xl flex-col gap-10">
       <section>
         <h2 className="font-gaegu text-2xl text-stone-800 dark:text-stone-200">
           Nieuwste recepten

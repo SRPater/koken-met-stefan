@@ -1,11 +1,13 @@
+"use server";
+
 import { prisma } from "@/lib/prisma";
-import { RecipeList } from "./recipe-list";
 
 const PAGE_SIZE = 12;
 
-export default async function RecipesPage() {
+export async function getRecipes(skip: number) {
   const recipes = await prisma.recipe.findMany({
     orderBy: { createdAt: "desc" },
+    skip,
     take: PAGE_SIZE,
     select: {
       id: true,
@@ -17,9 +19,5 @@ export default async function RecipesPage() {
 
   const hasMore = recipes.length === PAGE_SIZE;
 
-  return (
-    <div className="mx-auto max-w-6xl">
-      <RecipeList initialRecipes={recipes} initialHasMore={hasMore} />
-    </div>
-  );
+  return { recipes, hasMore };
 }

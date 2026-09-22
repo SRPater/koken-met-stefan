@@ -15,6 +15,7 @@ type IngredientRow = {
 export function RecipeForm() {
   const router = useRouter();
   const [title, setTitle] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [baseServings, setBaseServings] = useState(4);
   const [sourceName, setSourceName] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
@@ -63,6 +64,7 @@ export function RecipeForm() {
     try {
       await createRecipe({
         title,
+        imageUrl: imageUrl || undefined,
         baseServings,
         sourceName: sourceName || undefined,
         sourceUrl: sourceUrl || undefined,
@@ -99,6 +101,24 @@ export function RecipeForm() {
           required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          className="mt-1 w-full rounded border border-stone-300 px-3 py-2 dark:border-stone-700 dark:bg-stone-900"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="imageUrl"
+          className="block text-sm font-medium text-stone-700 dark:text-stone-300"
+        >
+          Foto (URL)
+        </label>
+        <input
+          id="imageUrl"
+          name="imageUrl"
+          type="url"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          placeholder="https://..."
           className="mt-1 w-full rounded border border-stone-300 px-3 py-2 dark:border-stone-700 dark:bg-stone-900"
         />
       </div>

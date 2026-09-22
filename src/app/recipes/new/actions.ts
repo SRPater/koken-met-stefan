@@ -13,6 +13,7 @@ type IngredientInput = {
 
 type CreateRecipeInput = {
   title: string;
+  imageUrl?: string;
   baseServings: number;
   sourceName?: string;
   sourceUrl?: string;
@@ -24,6 +25,7 @@ export async function createRecipe(input: CreateRecipeInput) {
   await prisma.recipe.create({
     data: {
       title: input.title,
+      imageUrl: input.imageUrl,
       baseServings: input.baseServings,
       sourceName: input.sourceName,
       sourceUrl: input.sourceUrl,
