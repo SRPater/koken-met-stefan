@@ -21,3 +21,10 @@ export const UNIT_OPTIONS = [
   })),
   { value: "CUSTOM", label: "anders..." },
 ];
+
+export function formatUnitLabel(unit: string | null, amount: number): string {
+  if (!unit) return "";
+  const label = UNIT_LABELS[unit];
+  if (!label) return "";
+  return amount > 1 ? label.plural : label.singular;
+}

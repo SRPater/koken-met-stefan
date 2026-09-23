@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createRecipe } from "./actions";
+import { createRecipe, updateRecipe } from "./actions";
 import { parseQuantity } from "@/lib/parse-quantity";
 import { UNIT_OPTIONS } from "@/lib/units";
 
@@ -14,17 +14,34 @@ type IngredientRow = {
   note: string;
 };
 
-export function RecipeForm() {
+type RecipeFormProps = {
+  recipeId?: string;
+  initialData?: {
+    title: string;
+    imageUrl: string;
+    baseServings: number;
+    sourceName: string;
+    sourceUrl: string;
+    steps: string[];
+    ingredients: IngredientRow[];
+  };
+};
+
+export function RecipeForm({ recipeId, initialData }: RecipeFormProps) {
   const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [baseServings, setBaseServings] = useState(4);
-  const [sourceName, setSourceName] = useState("");
-  const [sourceUrl, setSourceUrl] = useState("");
-  const [steps, setSteps] = useState<string[]>([""]);
-  const [ingredients, setIngredients] = useState<IngredientRow[]>([
-    { name: "", quantity: "", unit: "", customUnit: "", note: "" },
-  ]);
+  const isEditing = Boolean(recipeId);
+
+  const [title, setTitle] = useState(initialData?.title ?? "");
+  const [imageUrl, setImageUrl] = useState(initialData?.imageUrl ?? "");
+  const [baseServings, setBaseServings] = useState(initialData?.baseServings ?? 4);
+  const [sourceName, setSourceName] = useState(initialData?.sourceName ?? "");
+  const [sourceUrl, setSourceUrl] = useState(initialData?.sourceUrl ?? "");
+  const [steps, setSteps] = useState<string[]>(initialData?.steps ?? [""]);
+  const [ingredients, setIngredients] = useState<IngredientRow[]>(
+    initialData?.ingredients ?? [
+      { name: "", quantity: "", unit: "", customUnit: "", note: "" },
+    ],
+  );
   const [submitting, setSubmitting] = useState(false);
 
   function updateStep(index: number, value: string) {
@@ -64,7 +81,7 @@ export function RecipeForm() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await createRecipe({
+      const payload = {
         title,
         imageUrl: imageUrl || undefined,
         baseServings,
@@ -80,13 +97,23 @@ export function RecipeForm() {
               quantity,
               quantityMax,
               unit: ing.unit && ing.unit !== "CUSTOM" ? ing.unit : null,
-              customUnit: ing.unit === "CUSTOM" ? ing.customUnit.trim() || undefined : undefined,
-              note: ing.note || undefined,
-              position: index,
+              customUnit:
+                ing.unit === "CUSTOM"
+                  ? ing.customUnit.trim() || undefined
+                  : undefined,
+                note: ing.note || undefined,
+                position: index,
             };
           }),
-      });
-      router.push("/recipes");
+      };
+
+      if (isEditing && recipeId) {
+        await updateRecipe(recipeId, payload);
+        router.push(`/recipes/${recipeId}`);
+      } else {
+        await createRecipe(payload);
+        router.push("/recipes");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -306,7 +333,11 @@ export function RecipeForm() {
           disabled={submitting}
           className="self-start rounded bg-crimson px-6 py-2 text-white disabled:opacity-50 dark:bg-cyan dark:text-stone-950"
         >
-          {submitting ? "Opslaan..." : "Recept opslaan"}
+          {submitting
+            ? "Opslaan..."
+            : isEditing
+              ? "Wijzigingen opslaan"
+              : "Recept opslaan"}
         </button>
       </form>
   );
