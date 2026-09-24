@@ -9,3 +9,9 @@
   --color-crimson: #ad1f42;
   --color-cyan: #00cccc;
 }
+
+@layer base {
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}
