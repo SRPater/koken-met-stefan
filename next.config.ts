@@ -1,16 +1,14 @@
-import type { NextConfig } from "next";
+import { withSerwist } from "@serwist/turbopack";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
+const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
+        protocol: "https" as const,
         hostname: "**",
       },
     ],
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);

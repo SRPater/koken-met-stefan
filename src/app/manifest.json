@@ -1,0 +1,15 @@
+{
+  "name": "Koken Met Stefan",
+  "short_name": "Koken Met Stefan",
+  "description": "Een persoonlijke verzameling van recepten",
+  "start_url": "/",
+  "display": "standalone",
+  "background-color": "#ffffff",
+  "theme_color": "#ad1f42",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

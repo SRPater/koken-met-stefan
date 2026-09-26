@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import { SerwistProvider } from "@serwist/turbopack/react";
+import type { Metadata, Viewport } from "next";
 import { Gaegu } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
@@ -23,6 +24,21 @@ const delight = localFont({
 export const metadata: Metadata = {
   title: "Koken Met Stefan",
   description: "Een persoonlijke verzameling van recepten",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Koken Met Stefan",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ad1f42" },
+    { media: "(prefers-color-scheme: dark)", color: "#00cccc" },
+  ],
 };
 
 export default async function RootLayout({
@@ -36,49 +52,51 @@ export default async function RootLayout({
   return (
     <html lang="nl" className={`${gaegu.variable} ${delight.variable}`}>
       <body className="min-h-screen bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function () {
-                var stored = localStorage.getItem("theme");
-                var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-                if (stored === "dark" || (!stored && prefersDark)) {
-                  document.documentElement.classList.add("dark");
-                }
-              })();
-            `
-          }}
-        />
-        <header className="border-b border-stone-200 dark:border-stone-800">
-          <div className="flex items-center justify-between px-6 py-4 md:px-12 lg:px-20">
-            <div className="text-left">
-              <h1 className="font-delight text-3xl text-crimson sm:text-5xl dark:text-cyan">
-                Koken Met Stefan
-              </h1>
-              <p className="font-gaegu text-base text-stone-600 sm:text-lg dark:text-stone-400">
-                Een persoonlijke verzameling van recepten
-              </p>
-            </div>
+        <SerwistProvider swUrl="/serwist/sw.js">
+          <Script
+            id="theme-init"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function () {
+                  var stored = localStorage.getItem("theme");
+                  var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                  if (stored === "dark" || (!stored && prefersDark)) {
+                    document.documentElement.classList.add("dark");
+                  }
+                })();
+              `,
+            }}
+          />
+          <header className="border-b border-stone-200 dark:border-stone-800">
+            <div className="flex items-center justify-between px-6 py-4 md:px-12 lg:px-20">
+              <div className="text-left">
+                <h1 className="font-delight text-3xl text-crimson sm:text-5xl dark:text-cyan">
+                  Koken Met Stefan
+                </h1>
+                <p className="font-gaegu text-base text-stone-600 sm:text-lg dark:text-stone-400">
+                  Een persoonlijke verzameling van recepten
+                </p>
+              </div>
 
-            <div className="hidden items-center gap-6 sm:flex">
-              <nav className="flex gap-4">
-                {navLinks.map((link) => (
-                  <NavItem
-                    key={link.kind === "signout" ? "signout" : link.href}
-                    link={link}
-                    className="text-sm text-stone-700 hover:text-crimson dark:text-stone-300 dark:hover:text-cyan"
-                  />
-                ))}
-              </nav>
-              <ThemeToggle />
-            </div>
+              <div className="hidden items-center gap-6 sm:flex">
+                <nav className="flex gap-4">
+                  {navLinks.map((link) => (
+                    <NavItem
+                      key={link.kind === "signout" ? "signout" : link.href}
+                      link={link}
+                      className="text-sm text-stone-700 hover:text-crimson dark:text-stone-300 dark:hover:text-cyan"
+                    />
+                  ))}
+                </nav>
+                <ThemeToggle />
+              </div>
 
-            <MobileMenu navLinks={navLinks} />
-          </div>
-        </header>
-        <main className="px-4 py-8 md:px-12 lg:px-20">{children}</main>
+              <MobileMenu navLinks={navLinks} />
+            </div>
+          </header>
+          <main className="px-4 py-8 md:px-12 lg:px-20">{children}</main>
+        </SerwistProvider>
       </body>
     </html>
   );
