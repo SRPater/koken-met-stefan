@@ -5,7 +5,9 @@ import Script from "next/script";
 import "./globals.css";
 import { ThemeToggle } from "./theme-toggle";
 import { MobileMenu } from "./mobile-menu";
-import { navLinks } from "./nav-links";
+import { NavItem } from "./nav-item";
+import { getNavLinks } from "./nav-links";
+import { requireAuth } from "@/lib/get-session";
 
 const gaegu = Gaegu({
   subsets: ["latin"],
@@ -23,11 +25,14 @@ export const metadata: Metadata = {
   description: "Een persoonlijke verzameling van recepten",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await requireAuth();
+  const navLinks = getNavLinks(Boolean(session));
+
   return (
     <html lang="nl" className={`${gaegu.variable} ${delight.variable}`}>
       <body className="min-h-screen bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
@@ -60,19 +65,17 @@ export default function RootLayout({
             <div className="hidden items-center gap-6 sm:flex">
               <nav className="flex gap-4">
                 {navLinks.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    className="text-sm text-stone-700 hoveR:text-crimson dark:text-stone-300 dark:hover:text-cyan"
-                  >
-                    {link.label}
-                  </a>
+                  <NavItem
+                    key={link.kind === "signout" ? "signout" : link.href}
+                    link={link}
+                    className="text-sm text-stone-700 hover:text-crimson dark:text-stone-300 dark:hover:text-cyan"
+                  />
                 ))}
               </nav>
               <ThemeToggle />
             </div>
 
-            <MobileMenu />
+            <MobileMenu navLinks={navLinks} />
           </div>
         </header>
         <main className="px-4 py-8 md:px-12 lg:px-20">{children}</main>

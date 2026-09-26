@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/get-session";
 import { revalidatePath } from "next/cache";
 
 type IngredientInput = {
@@ -24,6 +25,9 @@ type CreateRecipeInput = {
 };
 
 export async function createRecipe(input: CreateRecipeInput) {
+  const session = await requireAuth();
+  if (!session) throw new Error("Niet geautoriseerd.");
+
   await prisma.recipe.create({
     data: {
       title: input.title,
@@ -60,6 +64,9 @@ export async function createRecipe(input: CreateRecipeInput) {
 }
 
 export async function updateRecipe(id: string, input: CreateRecipeInput) {
+  const session = await requireAuth();
+  if (!session) throw new Error("Niet geautoriseerd.");
+  
   await prisma.$transaction(async (tx) => {
     await tx.recipeIngredient.deleteMany({ where: { recipeId: id } });
 

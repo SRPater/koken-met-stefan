@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { navLinks } from "./nav-links";
+import type { NavLink } from "./nav-links";
+import { NavItem } from "./nav-item";
 import { ThemeToggle } from "./theme-toggle";
 
-export function MobileMenu() {
+export function MobileMenu({ navLinks }: { navLinks: NavLink[] }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -35,14 +36,12 @@ export function MobileMenu() {
 
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
+                <NavItem
+                  key={link.kind === "signout" ? "signout" : link.href}
+                  link={link}
                   className="font-gaegu text-xl text-stone-800 dark:text-stone-200"
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </a>
+                  onNavigate={() => setOpen(false)}
+                />
               ))}
             </nav>
 

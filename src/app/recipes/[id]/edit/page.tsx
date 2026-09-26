@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/get-session";
 import { RecipeForm } from "../../new/recipe-form";
 import { DeleteButton } from "./delete-button";
 
@@ -9,6 +11,9 @@ export default async function EditRecipePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const session = await requireAuth();
+  if (!session) redirect("/login");
+  
   const { id } = await params;
 
   const recipe = await prisma.recipe.findUnique({

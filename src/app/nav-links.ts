@@ -1,15 +1,20 @@
-// TODO: replace with a real session check one Auth.js is wired up
-export const isLoggedIn = false;
+export type NavLink =
+  | { kind: "link"; href: string; label: string }
+  | { kind: "signout"; label: string };
 
-export const navLinks = isLoggedIn
-  ? [
-      { href: "/", label: "Home" },
-      { href: "/recipes", label: "Alle Recepten" },
-      { href: "/recipes/new", label: "Recept Toevoegen" },
-      { href: "/logout", label: "Uitloggen" },
-    ]
-  : [
-      { href: "/", label: "Home" },
-      { href: "/recipes", label: "Alle Recepten" },
-      { href: "/login", label: "Inloggen" },
+export function getNavLinks(isLoggedIn: boolean): NavLink[] {
+  const base: NavLink[] = [
+    { kind: "link", href: "/", label: "Home" },
+    { kind: "link", href: "/recipes", label: "Alle Recepten" },
+  ];
+
+  if (isLoggedIn) {
+    return [
+      ...base,
+      { kind: "link", href: "/recipes/new", label: "Recept toevoegen" },
+      { kind: "signout", label: "Uitloggen" },
     ];
+  }
+
+  return [...base, { kind: "link", href: "/login", label: "Inloggen" }];
+}
