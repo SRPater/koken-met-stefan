@@ -9,7 +9,7 @@ export function RecipeCard({ id, title, imageUrl, sourceName }: RecipeCardProps)
   return (
     <a
       href={`/recipes/${id}`}
-      className="group overflow-hidden rounded-lg border border-stone-200 dark:border-stone-800"
+      className="group block overflow-hidden rounded-lg border border-stone-200 dark:border-stone-800"
     >
       <div className="relative aspect-square bg-stone-100 dark:bg-stone-900">
         {imageUrl ? (
@@ -24,7 +24,7 @@ export function RecipeCard({ id, title, imageUrl, sourceName }: RecipeCardProps)
           </div>
         )}
       </div>
-      <div className="p-3">
+      <div className="px-3 py-2">
         <h3 className="font-medium text-stone-800 dark:text-stone-200">
           {title}
         </h3>
