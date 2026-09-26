@@ -36,11 +36,11 @@ login gating write access.
 
 Requires a local PostgreSQL database.
 
-\`\`\`bash
+```bash
 npm install
 npx prisma migrate dev
 npm run dev
-\`\`\`
+```
 
 Environment variables needed in `.env` - see `.env.example` for
 the full list (GitHub OAuth credentials, Better Auth secret,
