@@ -53,6 +53,9 @@ export default async function RootLayout({
     <html lang="nl" className={`${gaegu.variable} ${delight.variable}`}>
       <body className="min-h-screen bg-white text-stone-900 dark:bg-stone-950 dark:text-stone-100">
         <SerwistProvider swUrl="/serwist/sw.js">
+          <div className="fixed right-4 bottom-4 z-40 hidden sm:block">
+            <ThemeToggle />
+          </div>
           <Script
             id="theme-init"
             strategy="beforeInteractive"
@@ -81,15 +84,18 @@ export default async function RootLayout({
 
               <div className="hidden items-center gap-6 sm:flex">
                 <nav className="flex gap-4">
-                  {navLinks.map((link) => (
+                  {navLinks.slice(0, -1).map((link) => (
                     <NavItem
-                      key={link.kind === "signout" ? "signout" : link.href}
+                      key={link.kind === "signout"? "signout" : link.href}
                       link={link}
                       className="text-sm text-stone-700 hover:text-crimson dark:text-stone-300 dark:hover:text-cyan"
                     />
                   ))}
                 </nav>
-                <ThemeToggle />
+                <NavItem
+                  link={navLinks[navLinks.length - 1]}
+                  className="rounded-full bg-crimson px-4 py-1.5 text-sm text-white transition-colors hover:bg-crimson/90 dark:bg-cyan dark:text-stone-950 dark:hover:bg-cyan/90"
+                />
               </div>
 
               <MobileMenu navLinks={navLinks} />

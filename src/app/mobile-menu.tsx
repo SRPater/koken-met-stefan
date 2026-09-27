@@ -8,6 +8,8 @@ import { ThemeToggle } from "./theme-toggle";
 
 export function MobileMenu({ navLinks }: { navLinks: NavLink[] }) {
   const [open, setOpen] = useState(false);
+  const normalLinks = navLinks.slice(0, -1);
+  const actionLink = navLinks[navLinks.length - 1];
 
   return (
     <div className="sm:hidden">
@@ -35,7 +37,7 @@ export function MobileMenu({ navLinks }: { navLinks: NavLink[] }) {
             </button>
 
             <nav className="flex flex-col gap-4">
-              {navLinks.map((link) => (
+              {normalLinks.map((link) => (
                 <NavItem
                   key={link.kind === "signout" ? "signout" : link.href}
                   link={link}
@@ -44,6 +46,12 @@ export function MobileMenu({ navLinks }: { navLinks: NavLink[] }) {
                 />
               ))}
             </nav>
+
+            <NavItem
+              link={actionLink}
+              className="font-gaegu mt-4 self-start rounded-full bg-crimson px-5 py-2 text-lg text-white transition-colors hover:bg-crimson/90 dark:bg-cyan dark:text-stone-950 dark:hover:bg-cyan/90"
+              onNavigate={() => setOpen(false)}
+            />
 
             <div className="mt-auto">
               <ThemeToggle />
