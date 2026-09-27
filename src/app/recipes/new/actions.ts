@@ -24,9 +24,41 @@ type CreateRecipeInput = {
   ingredients: IngredientInput[];
 };
 
+async function buildIngredientRecords(
+  ingredients: IngredientInput[],
+  client: typeof prisma,
+) {
+  const records = [];
+
+  for (const ing of ingredients) {
+    const ingredient = await client.ingredient.upsert({
+      where: { name: ing.name },
+      update: {},
+      create: { name: ing.name },
+    });
+
+    records.push({
+      ingredientId: ingredient.id,
+      quantity: ing.quantity,
+      quantityMax: ing.quantityMax,
+      unit: ing.unit as never,
+      customUnit: ing.customUnit,
+      note: ing.note,
+      position: ing.position,
+    });
+  }
+
+  return records;
+}
+
 export async function createRecipe(input: CreateRecipeInput) {
   const session = await requireAuth();
   if (!session) throw new Error("Niet geautoriseerd.");
+
+  const ingredientRecords = await buildIngredientRecords(
+    input.ingredients,
+    prisma,
+  );
 
   await prisma.recipe.create({
     data: {
@@ -37,25 +69,7 @@ export async function createRecipe(input: CreateRecipeInput) {
       sourceUrl: input.sourceUrl,
       steps: input.steps,
       ingredients: {
-        create: await Promise.all(
-          input.ingredients.map(async (ing) => {
-            const ingredient = await prisma.ingredient.upsert({
-              where: { name: ing.name },
-              update: {},
-              create: { name: ing.name },
-            });
-
-            return {
-              ingredientId: ingredient.id,
-              quantity: ing.quantity,
-              quantityMax: ing.quantityMax,
-              unit: ing.unit as never, // narrowed to the Unite num by the <select>
-              customUnit: ing.customUnit,
-              note: ing.note,
-              position: ing.position,
-            };
-          }),
-        ),
+        create: ingredientRecords,
       },
     },
   });
@@ -70,6 +84,11 @@ export async function updateRecipe(id: string, input: CreateRecipeInput) {
   await prisma.$transaction(async (tx) => {
     await tx.recipeIngredient.deleteMany({ where: { recipeId: id } });
 
+    const ingredientRecords = await buildIngredientRecords(
+      input.ingredients,
+      tx as unknown as typeof prisma,
+    );
+
     await tx.recipe.update({
       where: { id },
       data: {
@@ -80,25 +99,7 @@ export async function updateRecipe(id: string, input: CreateRecipeInput) {
         sourceUrl: input.sourceUrl,
         steps: input.steps,
         ingredients: {
-          create: await Promise.all(
-            input.ingredients.map(async (ing) => {
-              const ingredient = await tx.ingredient.upsert({
-                where: { name: ing.name },
-                update: {},
-                create: { name: ing.name },
-              });
-
-              return {
-                ingredientId: ingredient.id,
-                quantity: ing.quantity,
-                quantityMax: ing.quantityMax,
-                unit: ing.unit as never,
-                customUnit: ing.customUnit,
-                note: ing.note,
-                position: ing.position,
-              };
-            }),
-          ),
+          create: ingredientRecords,
         },
       },
     });
