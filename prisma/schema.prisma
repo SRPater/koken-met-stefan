@@ -14,6 +14,7 @@ datasource db {
 
 model Recipe {
   id           String   @id @default(cuid())
+  slug         String   @unique
   title        String
   imageUrl     String?
   baseServings Int      @default(4)

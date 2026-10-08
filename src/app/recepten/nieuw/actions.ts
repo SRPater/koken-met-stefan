@@ -1,8 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/get-session";
 import { revalidatePath } from "next/cache";
+import { requireAuth } from "@/lib/get-session";
+import { slugify } from "@/lib/slugify";
 
 type IngredientInput = {
   name: string;
@@ -51,6 +52,19 @@ async function buildIngredientRecords(
   return records;
 }
 
+async function generateUniqueSlug(title: string): Promise<string> {
+  const base = slugify(title);
+  let slug = base;
+  let suffix = 2;
+
+  while (await prisma.recipe.findUnique({ where: { slug } })) {
+    slug = `${base}-${suffix}`;
+    suffix++;
+  }
+
+  return slug;
+}
+
 export async function createRecipe(input: CreateRecipeInput) {
   const session = await requireAuth();
   if (!session) throw new Error("Niet geautoriseerd.");
@@ -60,9 +74,12 @@ export async function createRecipe(input: CreateRecipeInput) {
     prisma,
   );
 
+  const slug = await generateUniqueSlug(input.title);
+
   await prisma.recipe.create({
     data: {
       title: input.title,
+      slug,
       imageUrl: input.imageUrl,
       baseServings: input.baseServings,
       sourceName: input.sourceName,
@@ -74,14 +91,14 @@ export async function createRecipe(input: CreateRecipeInput) {
     },
   });
 
-  revalidatePath("/recipes");
+  revalidatePath("/recepten");
 }
 
 export async function updateRecipe(id: string, input: CreateRecipeInput) {
   const session = await requireAuth();
   if (!session) throw new Error("Niet geautoriseerd.");
   
-  await prisma.$transaction(async (tx) => {
+  const recipe = await prisma.$transaction(async (tx) => {
     await tx.recipeIngredient.deleteMany({ where: { recipeId: id } });
 
     const ingredientRecords = await buildIngredientRecords(
@@ -89,7 +106,7 @@ export async function updateRecipe(id: string, input: CreateRecipeInput) {
       tx as unknown as typeof prisma,
     );
 
-    await tx.recipe.update({
+    return tx.recipe.update({
       where: { id },
       data: {
         title: input.title,
@@ -105,6 +122,6 @@ export async function updateRecipe(id: string, input: CreateRecipeInput) {
     });
   });
 
-  revalidatePath("/recipes");
-  revalidatePath(`/recipes/${id}`);
+  revalidatePath("/recepten");
+  revalidatePath(`/recepten/${recipe.slug}`);
 }

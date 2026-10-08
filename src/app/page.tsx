@@ -5,12 +5,12 @@ export default async function HomePage() {
   const newest = await prisma.recipe.findMany({
     orderBy: { createdAt: "desc" },
     take: 6,
-    select: { id: true, title: true, imageUrl: true },
+    select: { id: true, slug: true, title: true, imageUrl: true },
   });
 
   const random = await prisma.$queryRaw<
-    { id: string; title: string; imageUrl: string | null }[]
-  >`SELECT id, title, "imageUrl" FROM "Recipe" ORDER BY RANDOM() LIMIT 6`;
+    { id: string; slug: string; title: string; imageUrl: string | null }[]
+  >`SELECT id, slug, title, "imageUrl" FROM "Recipe" ORDER BY RANDOM() LIMIT 6`;
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-10">

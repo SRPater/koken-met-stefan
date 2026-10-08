@@ -5,12 +5,12 @@ import { IngredientList } from "./ingredient-list";
 export default async function RecipeDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { id } = await params;
+  const { slug } = await params;
 
   const recipe = await prisma.recipe.findUnique({
-    where: { id },
+    where: { slug },
     include: {
       ingredients: {
         orderBy: { position: "asc" },
@@ -27,13 +27,13 @@ export default async function RecipeDetailPage({
     <div className="mx-auto max-w-3xl">
       <div className="mb-4 flex items-center justify-between">
         <Link
-          href="/recipes"
+          href="/recepten"
           className="text-sm text-stone-500 hover:text-crimson dark:hover:text-cyan"
         >
           ← Alle recepten
         </Link>
         <Link
-          href={`/recipes/${recipe.id}/edit`}
+          href={`/recepten/${recipe.slug}/bewerken`}
           className="text-sm text-crimson hover:underline dark:text-cyan"
         >
           Bewerken

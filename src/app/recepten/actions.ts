@@ -11,6 +11,7 @@ export async function getRecipes(skip: number) {
     take: PAGE_SIZE,
     select: {
       id: true,
+      slug: true,
       title: true,
       imageUrl: true,
       sourceName: true,

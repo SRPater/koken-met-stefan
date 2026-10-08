@@ -1,14 +1,14 @@
 type RecipeCardProps = {
-  id: string;
+  slug: string;
   title: string;
   imageUrl: string | null;
   sourceName: string | null;
 };
 
-export function RecipeCard({ id, title, imageUrl, sourceName }: RecipeCardProps) {
+export function RecipeCard({ slug, title, imageUrl, sourceName }: RecipeCardProps) {
   return (
     <a
-      href={`/recipes/${id}`}
+      href={`/recepten/${slug}`}
       className="group block overflow-hidden rounded-lg border border-stone-200 dark:border-stone-800"
     >
       <div className="relative aspect-square bg-stone-100 dark:bg-stone-900">

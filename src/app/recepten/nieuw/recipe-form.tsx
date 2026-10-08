@@ -16,6 +16,7 @@ type IngredientRow = {
 
 type RecipeFormProps = {
   recipeId?: string;
+  recipeSlug?: string;
   initialData?: {
     title: string;
     imageUrl: string;
@@ -27,7 +28,7 @@ type RecipeFormProps = {
   };
 };
 
-export function RecipeForm({ recipeId, initialData }: RecipeFormProps) {
+export function RecipeForm({ recipeId, recipeSlug, initialData }: RecipeFormProps) {
   const router = useRouter();
   const isEditing = Boolean(recipeId);
 
@@ -109,10 +110,10 @@ export function RecipeForm({ recipeId, initialData }: RecipeFormProps) {
 
       if (isEditing && recipeId) {
         await updateRecipe(recipeId, payload);
-        router.push(`/recipes/${recipeId}`);
+        router.push(`/recepten/${recipeSlug}`);
       } else {
         await createRecipe(payload);
-        router.push("/recipes");
+        router.push("/recepten");
       }
     } finally {
       setSubmitting(false);

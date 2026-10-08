@@ -6,6 +6,7 @@ import { getRecipes } from "./actions";
 
 type Recipe = {
   id: string;
+  slug: string;
   title: string;
   imageUrl: string | null;
   sourceName: string | null;

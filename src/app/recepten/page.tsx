@@ -9,6 +9,7 @@ export default async function RecipesPage() {
     take: PAGE_SIZE,
     select: {
       id: true,
+      slug: true,
       title: true,
       imageUrl: true,
       sourceName: true,

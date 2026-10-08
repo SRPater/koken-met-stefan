@@ -13,7 +13,7 @@ export function DeleteButton({ recipeId }: { recipeId: string}) {
   async function handleConfirm() {
     setDeleting(true);
     await deleteRecipe(recipeId);
-    router.push("/recipes");
+    router.push("/recepten");
   }
 
   return (

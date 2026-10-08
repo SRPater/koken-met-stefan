@@ -2,10 +2,11 @@
 
 import { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { RecipeCard } from "./recipes/recipe-card";
+import { RecipeCard } from "./recepten/recipe-card";
 
 type Recipe = {
   id: string;
+  slug: string;
   title: string;
   imageUrl: string | null;
 };
@@ -40,7 +41,7 @@ export function RecipeCarousel({ recipes }: { recipes: Recipe[] }) {
   }
 
   if (recipes.length === 0) {
-    return <p className="text-stone-500">Geen recepten gevonden.</p>
+    return <p className="text-stone-500">Geen recepten gevonden.</p>;
   }
 
   return (
@@ -56,7 +57,7 @@ export function RecipeCarousel({ recipes }: { recipes: Recipe[] }) {
             className="w-[calc(100%-0.75rem)] shrink-0 snap-start sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]"
           >
             <RecipeCard
-              id={recipe.id}
+              slug={recipe.slug}
               title={recipe.title}
               imageUrl={recipe.imageUrl}
               sourceName={null}

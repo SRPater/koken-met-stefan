@@ -5,13 +5,13 @@ export type NavLink =
 export function getNavLinks(isLoggedIn: boolean): NavLink[] {
   const base: NavLink[] = [
     { kind: "link", href: "/", label: "Home" },
-    { kind: "link", href: "/recipes", label: "Alle Recepten" },
+    { kind: "link", href: "/recepten", label: "Alle Recepten" },
   ];
 
   if (isLoggedIn) {
     return [
       ...base,
-      { kind: "link", href: "/recipes/new", label: "Recept toevoegen" },
+      { kind: "link", href: "/recepten/nieuw", label: "Recept toevoegen" },
       { kind: "signout", label: "Uitloggen" },
     ];
   }
